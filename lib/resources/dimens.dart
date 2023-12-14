@@ -1,0 +1,29 @@
+const MARGIN_MEDIUM_2 = 16.0;
+
+const margin_small = 4.0;
+const margin_card_medium = 6.0;
+const margin_medium = 8.0;
+const margin_medium_2 = 16.0;
+const margin_card_medium_2 = 12.0;
+const margin_medium_3 = 20.0;
+const margin_large = 24.0;
+const double marginSmall = 4.0;
+const double marginCardMedium = 6.0;
+const double marginMedium = 8.0;
+const double marginCardMedium2 = 12.0;
+const double marginMedium2 = 16.0;
+const double marginMedium3 = 18.0;
+const double marginLarge = 24.0;
+const double marginXLarge = 32.0;
+const double marginXXLarge = 48.0;
+const double textSmaller = 10.0;
+const double textSmall = 12.0;
+const double textRegular = 14.0;
+const double textRegular2x = 16.0;
+const double textRegular3x = 20.0;
+const double textHeading1x = 24.0;
+const double textHeading2x = 32.0;
+const double textBig = 40.0;
+const double textBig2x = 60.0;
+const double textBig3x = 8.0;
+
