@@ -14,6 +14,7 @@ import 'package:flutter_practise/viewItems/see_more_text.dart';
 import 'package:flutter_practise/viewItems/show_case_view.dart';
 import 'package:flutter_practise/viewItems/titleText_with_see_more_view.dart';
 import 'package:flutter_practise/viewItems/title_text_view.dart';
+import '../data/vos/genre_vo.dart';
 import '../viewItems/movie_view.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
 
   List<MovieVO>? popularMovies;
 
+  List<GenreVO>? genres;
+
   MovieModel movieModel = MovieModelImpl();
 
   @override
@@ -59,7 +62,17 @@ class _HomePageState extends State<HomePage> {
     }).catchError((onError) {
       debugPrint(onError.toString());
     });
-    super.initState();
+
+    movieModel.getGenre().then((genres){
+      setState(() {
+        genres = genres;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+
+
+        super.initState();
   }
 
   @override
@@ -104,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               const CheckMovieShowTime(),
               const SizedBox(height: margin_medium_2),
               GenreSectionView(
-                  genreList: genreList,
+                  genreList: genres. ?? [],
                   () => _navigateToMovieDetailsScreen(context)),
               const SizedBox(height: MARGIN_MEDIUM_2),
               const ShowCasesSection(),

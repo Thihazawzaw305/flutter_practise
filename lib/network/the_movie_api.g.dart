@@ -90,6 +90,33 @@ class _TheMovieApi implements TheMovieApi {
     return value;
   }
 
+  @override
+  Future<GetGenreResponse> getGenres(String apiKey) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'api_key': apiKey};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GetGenreResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/3/genre/movie/list',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = GetGenreResponse.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

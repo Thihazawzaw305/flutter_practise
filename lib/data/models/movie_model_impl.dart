@@ -1,4 +1,5 @@
 import 'package:flutter_practise/data/models/movie_model.dart';
+import 'package:flutter_practise/data/vos/genre_vo.dart';
 import 'package:flutter_practise/data/vos/movie_vo.dart';
 import 'package:flutter_practise/network/movie_data_agent.dart';
 import 'package:flutter_practise/network/retrofit_data_agent_impl.dart';
@@ -21,6 +22,11 @@ class MovieModelImpl extends MovieModel{
   @override
   Future<List<MovieVO>?> getPopularMovie(int page) {
    return _dataAgent.getPopularMovie(page);
+  }
+
+  @override
+  Future<List<GenreVO>?> getGenre() {
+   return _dataAgent.getGenre();
   }
 
   

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_practise/data/vos/genre_vo.dart';
 import 'package:flutter_practise/data/vos/movie_vo.dart';
 import 'package:flutter_practise/network/api_constant.dart';
 import 'package:flutter_practise/network/movie_data_agent.dart';
@@ -35,6 +36,15 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
        .asStream()
        .map((response) => response.results)
        .first;
+  }
+
+  @override
+  Future<List<GenreVO>?> getGenre() {
+   return movieAPi.getGenres(API_KEY)
+       .asStream()
+       .map((response) => response.genres)
+       .first;
+
   }
 
 

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_practise/network/api_constant.dart';
+import 'package:flutter_practise/network/responses/get_genre_response.dart';
 import 'package:flutter_practise/network/responses/get_now_playing_movie_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -22,5 +23,11 @@ abstract class TheMovieApi {
       @Query(PARAM_LANGUAGE) String language,
       @Query(PARAM_PAGE) String page,
       );
+
+  @GET(API_GET_GENRES)
+  Future<GetGenreResponse> getGenres(
+  @Query(PARAM_API_KEY)  String apiKey,
+  );
+
 
 }
