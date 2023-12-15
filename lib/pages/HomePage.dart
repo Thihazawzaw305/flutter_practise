@@ -8,13 +8,11 @@ import 'package:flutter_practise/pages/MovieDetailsPage.dart';
 import 'package:flutter_practise/resources/colors.dart';
 import 'package:flutter_practise/resources/dimens.dart';
 import 'package:flutter_practise/resources/string.dart';
-import 'package:flutter_practise/viewItems/actor_item_view.dart';
 import 'package:flutter_practise/viewItems/actors_and_creators_section_view.dart';
 import 'package:flutter_practise/viewItems/banner_view.dart';
 import 'package:flutter_practise/viewItems/see_more_text.dart';
 import 'package:flutter_practise/viewItems/show_case_view.dart';
 import 'package:flutter_practise/viewItems/titleText_with_see_more_view.dart';
-import 'package:flutter_practise/viewItems/title_text_view.dart';
 import '../data/vos/genre_vo.dart';
 import '../viewItems/movie_view.dart';
 
@@ -151,7 +149,8 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: margin_medium_2),
               HorizontalMovieListView(
                   movieList: nowPlayingMovies,
-                  () => _navigateToMovieDetailsScreen(context)),
+                  onTapMovie: (movieId) => _navigateToMovieDetailsScreen(context, movieId!)),
+
               const SizedBox(height: margin_medium_2),
               const CheckMovieShowTime(),
               const SizedBox(height: margin_medium_2),
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       _GetMovieByGenre(genreId);
                     }
                   },
-                  () => _navigateToMovieDetailsScreen(context)),
+                  onTapMovie: (movieId) => _navigateToMovieDetailsScreen(context,movieId!)),
               const SizedBox(height: MARGIN_MEDIUM_2),
                ShowCasesSection(topRatedMovies: topRatedMovies?.take(10).toList(),),
               const SizedBox(height: marginLarge),
@@ -180,9 +179,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigateToMovieDetailsScreen(BuildContext context) {
+  void _navigateToMovieDetailsScreen(BuildContext context, int movieId) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MovieDetailsPage()));
+        context, MaterialPageRoute(builder: (context) => MovieDetailsPage(movieId: movieId,)));
   }
 }
 
@@ -269,7 +268,7 @@ class ShowCasesSection extends StatelessWidget {
 }
 
 class HorizontalMovieListView extends StatelessWidget {
-  HorizontalMovieListView(this.onTapMovie, {required this.movieList});
+  HorizontalMovieListView( {required this.movieList,required this.onTapMovie});
 
   final Function(int?) onTapMovie;
   final List<MovieVO>? movieList;
@@ -283,11 +282,11 @@ class HorizontalMovieListView extends StatelessWidget {
           padding: EdgeInsets.only(left: MARGIN_MEDIUM_2, right: margin_medium),
           itemCount: movieList?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
-            return MovieView(
-              () {
-                onTapMovie(movieList?[index].id);
-              },
-              movie: movieList?[index],
+            return GestureDetector(
+              onTap:() => onTapMovie(movieList?[index].id),
+              child: MovieView(
+                movie: movieList?[index],
+              ),
             );
           })
           :const Center(
@@ -342,13 +341,16 @@ class _BannerSectionViewState extends State<BannerSectionView> {
 }
 
 class GenreSectionView extends StatelessWidget {
-  final Function onTapMovie;
 
-  const GenreSectionView(this.onTapMovie, {super.key, required this.genreList, required this.moviesByGenre, required this.onChooseGenre});
+  const GenreSectionView({super.key, required this.genreList, required this.moviesByGenre, required this.onChooseGenre,required this.onTapMovie});
 
   final List<GenreVO> genreList;
   final List<MovieVO> moviesByGenre;
   final Function(int?) onChooseGenre;
+  final Function(int?) onTapMovie;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -380,10 +382,10 @@ class GenreSectionView extends StatelessWidget {
               const EdgeInsets.only(bottom: MARGIN_MEDIUM_2, top: margin_large),
           color: PRIMARY_COLOR,
           child: HorizontalMovieListView(
+            onTapMovie : (movieId) => onTapMovie(movieId),
               movieList: moviesByGenre,
-                  () {
-            onTapMovie();
-          }),
+
+                ),
         )
       ],
     );

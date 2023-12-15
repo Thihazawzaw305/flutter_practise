@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_practise/data/models/movie_model.dart';
 import 'package:flutter_practise/data/models/movie_model_impl.dart';
+import 'package:flutter_practise/data/vos/movie_vo.dart';
+import 'package:flutter_practise/network/api_constant.dart';
 import 'package:flutter_practise/resources/colors.dart';
 import 'package:flutter_practise/resources/dimens.dart';
 import 'package:flutter_practise/viewItems/actors_and_creators_section_view.dart';
@@ -9,8 +11,11 @@ import 'package:flutter_practise/viewItems/gradient_view.dart';
 import 'package:flutter_practise/viewItems/rating_view.dart';
 import 'package:flutter_practise/viewItems/title_text_view.dart';
 
+import '../data/vos/actor_vo.dart';
+
 class MovieDetailsPage extends StatefulWidget {
-  final int movieId ;
+  final int movieId;
+
   MovieDetailsPage({super.key, required this.movieId});
 
   @override
@@ -20,6 +25,35 @@ class MovieDetailsPage extends StatefulWidget {
 class _MovieDetailsPageState extends State<MovieDetailsPage> {
   final List<String> genreList = ["Action", "Horror", "Adventure"];
   final MovieModel _movieModel = MovieModelImpl();
+  MovieVO? movieDetails;
+  List<ActorVO>? actor;
+  List<ActorVO>? crew;
+
+
+  @override
+  void initState() {
+    _movieModel.getMovieDetails(widget.movieId).then((movieDetails) {
+      setState(() {
+        this.movieDetails = movieDetails;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+    
+    _movieModel.getCreditsByMovie(widget.movieId).then((castAndCrew)
+    {
+      setState(() {
+        this.actor = castAndCrew.first;
+        this.crew = castAndCrew[1];
+
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,30 +63,31 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
         child: CustomScrollView(
           slivers: [
             MovieDetailsSliverAppBarView(
-            () => Navigator.pop(context)
+              movie: movieDetails ,
+                    () => Navigator.pop(context)
             ),
             SliverList(
                 delegate: SliverChildListDelegate([
-              Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: margin_medium_2, vertical: margin_medium_2),
-                child: TralierSection(genreList),
-              ),
-              ActorsAndCreatorSectionView(
-                actorList: [],
-                titleText: "ACTORS",
-                seeMoreTextVisibility: false,
-                seeMoreText: "",
-              ),
-              SizedBox(height: marginLarge),
-              AboutFlimSection(),
-              SizedBox(height: marginLarge),
-              ActorsAndCreatorSectionView(
-                actorList: [],
-                  titleText: "CREATORS",
-                  seeMoreTextVisibility: true,
-                  seeMoreText: "MORE CREATORS")
-            ]))
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: margin_medium_2, vertical: margin_medium_2),
+                    child: TralierSection(genreList),
+                  ),
+                  ActorsAndCreatorSectionView(
+                    actorList:  actor ??[],
+                    titleText: "ACTORS",
+                    seeMoreTextVisibility: false,
+                    seeMoreText: "",
+                  ),
+                  SizedBox(height: marginLarge),
+                  AboutFlimSection(),
+                  SizedBox(height: marginLarge),
+                  ActorsAndCreatorSectionView(
+                      actorList: crew ??[],
+                      titleText: "CREATORS",
+                      seeMoreTextVisibility: true,
+                      seeMoreText: "MORE CREATORS")
+                ]))
           ],
         ),
       ),
@@ -85,7 +120,7 @@ class AboutFlimSection extends StatelessWidget {
           AboutFlimInfonView(
               label: "Original Title",
               description:
-                  "An ancient struggle between two Cybertronian races, the heroic Autobots and the evil Decepticons, comes to Earth, with a clue to the ultimate power held by a teenager."),
+              "An ancient struggle between two Cybertronian races, the heroic Autobots and the evil Decepticons, comes to Earth, with a clue to the ultimate power held by a teenager."),
         ],
       ),
     );
@@ -108,7 +143,10 @@ class AboutFlimInfonView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-            width: MediaQuery.of(context).size.width / 3,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width / 3,
             child: Text(
               label,
               style: TextStyle(
@@ -119,18 +157,16 @@ class AboutFlimInfonView extends StatelessWidget {
         SizedBox(width: margin_card_medium_2),
         Expanded(
             child: Text(
-          description,
-          style: TextStyle(color: Colors.white, fontSize: MARGIN_MEDIUM_2),
-        ))
+              description,
+              style: TextStyle(color: Colors.white, fontSize: MARGIN_MEDIUM_2),
+            ))
       ],
     );
   }
 }
 
 class TralierSection extends StatelessWidget {
-  TralierSection(
-    this.genreList,
-  );
+  TralierSection(this.genreList,);
 
   final List<String> genreList;
 
@@ -209,9 +245,9 @@ class MovieDetailsButtonsView extends StatelessWidget {
             borderRadius: BorderRadius.circular(margin_large),
             border: (isGhostButton)
                 ? Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  )
+              color: Colors.white,
+              width: 2,
+            )
                 : null),
         child: Center(
           child: Row(
@@ -252,9 +288,7 @@ class StoryLineView extends StatelessWidget {
 }
 
 class GenreChipView extends StatelessWidget {
-  const GenreChipView(
-    this.text,
-  );
+  const GenreChipView(this.text,);
 
   final String text;
 
@@ -273,10 +307,12 @@ class GenreChipView extends StatelessWidget {
 }
 
 class MovieDetailsSliverAppBarView extends StatelessWidget {
-  const MovieDetailsSliverAppBarView(this.onTapBack,{
-    super.key,
+  const MovieDetailsSliverAppBarView(this.onTapBack, {
+    super.key, required this.movie,
   });
+
   final Function onTapBack;
+  final MovieVO? movie;
 
   @override
   Widget build(BuildContext context) {
@@ -289,13 +325,13 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(children: [
           Positioned.fill(
-            child: MovieDetailsAppBarImageView(),
+            child: MovieDetailsAppBarImageView(imageString: movie?.poster_path,),
           ),
           Positioned.fill(child: GradientView()),
           Align(
             alignment: Alignment.topLeft,
             child: MovieDetailsBackButtonView(() => onTapBack(),
-  ),
+            ),
           ),
           Align(
             alignment: Alignment.topRight,
@@ -308,7 +344,7 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
                   right: margin_medium_2,
                   left: margin_medium_2,
                   bottom: marginLarge),
-              child: MovieDetailsAppBarInfo(),
+              child: MovieDetailsAppBarInfo(movieInfo: movie,),
             ),
           )
         ]),
@@ -319,12 +355,14 @@ class MovieDetailsSliverAppBarView extends StatelessWidget {
 
 class MovieDetailsAppBarInfo extends StatelessWidget {
   const MovieDetailsAppBarInfo({
-    super.key,
+    super.key, required this.movieInfo,
   });
+
+  final MovieVO? movieInfo;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -340,7 +378,7 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
                   children: [
                     RatingBarView(),
                     SizedBox(height: margin_small),
-                    TitleText(text: "388876 VOTES"),
+                    TitleText(text: "${movieInfo?.vote_count }" ?? ""),
                     SizedBox(
                       height: margin_card_medium_2,
                     )
@@ -348,7 +386,7 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
                 ),
                 SizedBox(width: margin_medium),
                 Text(
-                  "9,76",
+                  "${movieInfo?.popularity}",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 56,
@@ -360,7 +398,7 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
         ),
         SizedBox(height: margin_medium),
         Text(
-          "Transformer",
+          movieInfo?.title ?? "",
           style: TextStyle(
               color: Colors.white,
               fontSize: textHeading2x,
@@ -412,7 +450,7 @@ class SearchButtonView extends StatelessWidget {
 }
 
 class MovieDetailsBackButtonView extends StatelessWidget {
- 
+
   final Function onTapBack;
 
   MovieDetailsBackButtonView(this.onTapBack);
@@ -422,7 +460,7 @@ class MovieDetailsBackButtonView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: marginXLarge, left: margin_medium_2),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           onTapBack();
         },
         child: Container(
@@ -443,13 +481,13 @@ class MovieDetailsBackButtonView extends StatelessWidget {
 
 class MovieDetailsAppBarImageView extends StatelessWidget {
   const MovieDetailsAppBarImageView({
-    super.key,
+    super.key, required this.imageString,
   });
-
+    final String? imageString;
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      "https://i.ebayimg.com/images/g/P7wAAOSwtqFkYoTI/s-l1600.jpg",
+      "$IMAGE_BASE_URL$imageString",
       fit: BoxFit.cover,
     );
   }
