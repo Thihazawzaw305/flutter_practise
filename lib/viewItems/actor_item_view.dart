@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_practise/data/vos/actor_vo.dart';
+import 'package:flutter_practise/network/api_constant.dart';
 import 'package:flutter_practise/resources/dimens.dart';
 
 
 
 class ActorItemView extends StatelessWidget {
-  const ActorItemView({super.key});
+  const ActorItemView({super.key, required this.actor});
+  final ActorVO actor;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class ActorItemView extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.network(
-              "https://render.fineartamerica.com/images/rendered/medium/poster/7.5/10/break/images/artworkimages/medium/3/a-hero-rises-photograph-by-williams-and-hirakawa-for-time.jpg",
+              "$IMAGE_BASE_URL${actor.profilePath}"?? "",
               fit: BoxFit.cover,
             ),
           ),
@@ -25,7 +28,7 @@ class ActorItemView extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: ActorNameAndLikeView(),
+            child: ActorNameAndLikeView(actor: actor),
           )
         ],
       ),
@@ -53,8 +56,9 @@ class ActorFavButton extends StatelessWidget {
 
 class ActorNameAndLikeView extends StatelessWidget {
   const ActorNameAndLikeView({
-    super.key,
+    super.key, required this.actor,
   });
+  final ActorVO actor;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,7 @@ class ActorNameAndLikeView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Black Panter",
+            actor.name ??"",
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700),
           ),
           SizedBox(height: margin_medium),

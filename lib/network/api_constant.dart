@@ -21,6 +21,7 @@ const String API_SEARCH_MOVIE ="/3/search/movie";
 const String PARAM_API_KEY = "api_key";
 const String PARAM_LANGUAGE = "language";
 const String PARAM_PAGE = "page";
+const String PARAM_GENRE_ID ="with_genres";
 
 /// constant values
 const String API_KEY = "19769a8d880a8f78ce6e18d788164b08";

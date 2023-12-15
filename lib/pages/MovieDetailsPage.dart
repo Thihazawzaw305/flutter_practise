@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practise/data/models/movie_model.dart';
+import 'package:flutter_practise/data/models/movie_model_impl.dart';
 import 'package:flutter_practise/resources/colors.dart';
 import 'package:flutter_practise/resources/dimens.dart';
 import 'package:flutter_practise/viewItems/actors_and_creators_section_view.dart';
@@ -7,10 +9,17 @@ import 'package:flutter_practise/viewItems/gradient_view.dart';
 import 'package:flutter_practise/viewItems/rating_view.dart';
 import 'package:flutter_practise/viewItems/title_text_view.dart';
 
-class MovieDetailsPage extends StatelessWidget {
-  MovieDetailsPage({super.key});
+class MovieDetailsPage extends StatefulWidget {
+  final int movieId ;
+  MovieDetailsPage({super.key, required this.movieId});
 
+  @override
+  State<MovieDetailsPage> createState() => _MovieDetailsPageState();
+}
+
+class _MovieDetailsPageState extends State<MovieDetailsPage> {
   final List<String> genreList = ["Action", "Horror", "Adventure"];
+  final MovieModel _movieModel = MovieModelImpl();
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +39,7 @@ class MovieDetailsPage extends StatelessWidget {
                 child: TralierSection(genreList),
               ),
               ActorsAndCreatorSectionView(
+                actorList: [],
                 titleText: "ACTORS",
                 seeMoreTextVisibility: false,
                 seeMoreText: "",
@@ -38,6 +48,7 @@ class MovieDetailsPage extends StatelessWidget {
               AboutFlimSection(),
               SizedBox(height: marginLarge),
               ActorsAndCreatorSectionView(
+                actorList: [],
                   titleText: "CREATORS",
                   seeMoreTextVisibility: true,
                   seeMoreText: "MORE CREATORS")

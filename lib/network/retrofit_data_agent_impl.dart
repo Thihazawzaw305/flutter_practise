@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_practise/data/vos/actor_vo.dart';
 import 'package:flutter_practise/data/vos/genre_vo.dart';
 import 'package:flutter_practise/data/vos/movie_vo.dart';
 import 'package:flutter_practise/network/api_constant.dart';
@@ -44,6 +45,49 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
        .asStream()
        .map((response) => response.genres)
        .first;
+
+  }
+
+  @override
+  Future<List<MovieVO>?> getTopRatedMovies(int page) {
+    return movieAPi.getTopRatedMovies(API_KEY, page.toString())
+        .asStream()
+        .map((response) => response.results)
+        .first;
+  }
+
+  @override
+  Future<List<ActorVO>?> getActors() {
+  return movieAPi.getActors(API_KEY)
+      .asStream()
+      .map((response) => response.results)
+      .first;
+  }
+
+  @override
+  Future<List<MovieVO>?> getMovieByGenre(String genreId) {
+   return movieAPi.getMovieByGenre(genreId, API_KEY)
+       .asStream()
+       .map((response) =>
+   response.results)
+       .first;
+  }
+
+  @override
+  Future<List<List<ActorVO>?>> getCreditsByMovie(int movieId) {
+   return movieAPi.getCreditsByMovie(movieId.toString(), API_KEY)
+       .asStream()
+   .map((response) =>
+   [
+     response.cast,
+     response.crew
+   ])
+       .first;
+  }
+
+  @override
+  Future<MovieVO?> getMovieDetails(int movieId) {
+    return movieAPi.getMovieDetails(movieId.toString(), API_KEY);
 
   }
 

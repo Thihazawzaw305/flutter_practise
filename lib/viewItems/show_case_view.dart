@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practise/network/api_constant.dart';
 import 'package:flutter_practise/viewItems/play_button_view.dart';
 import 'package:flutter_practise/viewItems/title_text_view.dart';
 
+import '../data/vos/movie_vo.dart';
 import '../resources/dimens.dart';
 
 class ShowCaseView extends StatelessWidget {
-  const ShowCaseView({super.key});
+  const ShowCaseView({super.key, required this.topRatedMovie});
+
+  final MovieVO topRatedMovie;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class ShowCaseView extends StatelessWidget {
       child: Stack(children: [
         Positioned.fill(
           child: Image.network(
-            "https://i.ebayimg.com/images/g/P7wAAOSwtqFkYoTI/s-l1600.jpg",
+            "$IMAGE_BASE_URL${topRatedMovie.poster_path}" ?? "" ,
             fit: BoxFit.cover,
           ),
         ),
@@ -33,14 +37,14 @@ class ShowCaseView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Transformer",
+                  topRatedMovie.title ?? "",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: textRegular2x,
                       fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: margin_small),
-               TitleText(text: "15 DECEMBER 2023")
+               TitleText(text: topRatedMovie.release_date ?? "")
               ],
             ),
           ),
