@@ -368,7 +368,7 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
       children: [
         Row(
           children: [
-            MovieDetailsYearView(),
+            MovieDetailsYearView(releaseYear: movieInfo?.release_date?.substring(0,4) ?? "",),
             Spacer(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -378,7 +378,7 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
                   children: [
                     RatingBarView(),
                     SizedBox(height: margin_small),
-                    TitleText(text: "${movieInfo?.vote_count }" ?? ""),
+                    TitleText(text: "${movieInfo?.vote_count } VOTE COUNT" ?? ""),
                     SizedBox(
                       height: margin_card_medium_2,
                     )
@@ -386,10 +386,10 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
                 ),
                 SizedBox(width: margin_medium),
                 Text(
-                  "${movieInfo?.popularity}",
+                  "${movieInfo?.vote_average.toString().substring(0,3)}",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 56,
+                    fontSize: 48,
                   ),
                 )
               ],
@@ -411,8 +411,10 @@ class MovieDetailsAppBarInfo extends StatelessWidget {
 
 class MovieDetailsYearView extends StatelessWidget {
   const MovieDetailsYearView({
-    super.key,
+    super.key, this.releaseYear,
   });
+
+  final String? releaseYear;
 
   @override
   Widget build(BuildContext context) {
@@ -424,7 +426,7 @@ class MovieDetailsYearView extends StatelessWidget {
           borderRadius: BorderRadius.circular(marginXLarge)),
       child: Center(
         child: Text(
-          "2016",
+          releaseYear ?? "",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -486,9 +488,15 @@ class MovieDetailsAppBarImageView extends StatelessWidget {
     final String? imageString;
   @override
   Widget build(BuildContext context) {
-    return Image.network(
+    return
+      Image.network(
       "$IMAGE_BASE_URL$imageString",
       fit: BoxFit.cover,
     );
-  }
+  //   CachedNetworkImage(
+  //     imageUrl: "$IMAGE_BASE_URL$imageString",
+  //     placeholder: (context, url) => CircularProgressIndicator(),
+  //     errorWidget: (context, url, error) => Icon(Icons.error),
+  //   );
+   }
 }
