@@ -17,7 +17,7 @@ import '../data/vos/genre_vo.dart';
 import '../viewItems/movie_view.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -51,7 +51,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-
+    super.initState();
+   //PopularMovie Network
     movieModel.getPopularMovie(1).then((popularMovieList) {
       setState(() {
         popularMovies = popularMovieList;
@@ -60,7 +61,17 @@ class _HomePageState extends State<HomePage> {
       debugPrint(onError.toString());
     });
 
+    // PopularMovie Database
+    movieModel.getPopularMovieFromDatabase().then((popularMovieList) {
+      setState(() {
+        popularMovies = popularMovieList;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
 
+
+    // nowPlayingMovie network
     movieModel.getNowPlayingMovie(1).then((movieList) {
       setState(() {
         nowPlayingMovies = movieList;
@@ -69,6 +80,20 @@ class _HomePageState extends State<HomePage> {
       debugPrint(onError.toString());
     });
 
+    // getNowPlaying database
+    movieModel.getNowPlayingMovieFromDatabase().then((movieList) {
+      setState(() {
+        nowPlayingMovies = movieList;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+
+
+
+
+
+    // get genre network
     movieModel.getGenre().then((genres){
       setState(() {
         genreList = genres;
@@ -80,7 +105,19 @@ class _HomePageState extends State<HomePage> {
     });
 
 
+    //get Genre database
+    movieModel.getGenreFromDatabase().then((genres){
+      setState(() {
+        genreList = genres;
 
+        _GetMovieByGenre(genreList?.first.id ?? 0);
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+
+
+    // get TopRated from network
     movieModel.getTopRatedMovies(1).then((movieList) {
       setState(() {
         topRatedMovies = movieList;
@@ -89,6 +126,18 @@ class _HomePageState extends State<HomePage> {
       debugPrint(onError.toString());
     });
 
+    // get TopRated from database
+    movieModel.getTopRatedMovieFromDatabase().then((movieList) {
+      setState(() {
+        topRatedMovies = movieList;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
+
+
+
+    // get actors from network
     movieModel.getActors().then((actorList) {
       setState(() {
         actors = actorList;
@@ -97,8 +146,17 @@ class _HomePageState extends State<HomePage> {
       debugPrint(onError.toString());
     });
 
+    // get actors from database
+    movieModel.getAllActorsFromDatabase().then((actorList) {
+      setState(() {
+        actors = actorList;
+      });
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+    });
 
-        super.initState();
+
+
   }
 
   void _GetMovieByGenre(int genreId) {
@@ -193,9 +251,9 @@ class CheckMovieShowTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
           horizontal: margin_medium_2, vertical: margin_large),
-      margin: EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
+      margin: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
       color: PRIMARY_COLOR,
       height: 180,
       child: const Row(
@@ -251,11 +309,11 @@ class ShowCasesSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: marginMedium2),
           child: TitleTextWithSeeMoreView(titleText: "SHOWCASE"),
         ),
-        SizedBox(height: marginLarge),
-        Container(
+        const SizedBox(height: marginLarge),
+        SizedBox(
           height: 220,
           child: ListView(
-            padding: EdgeInsets.only(left: margin_medium_2),
+            padding: const EdgeInsets.only(left: margin_medium_2),
             scrollDirection: Axis.horizontal,
             children: topRatedMovies
                 ?.map((movies) => ShowCaseView(topRatedMovie: movies)).
@@ -268,7 +326,7 @@ class ShowCasesSection extends StatelessWidget {
 }
 
 class HorizontalMovieListView extends StatelessWidget {
-  HorizontalMovieListView( {required this.movieList,required this.onTapMovie});
+  const HorizontalMovieListView( {super.key, required this.movieList,required this.onTapMovie});
 
   final Function(int?) onTapMovie;
   final List<MovieVO>? movieList;
@@ -279,7 +337,7 @@ class HorizontalMovieListView extends StatelessWidget {
       height: 280,
       child:(movieList != null)?ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.only(left: MARGIN_MEDIUM_2, right: margin_medium),
+          padding: const EdgeInsets.only(left: MARGIN_MEDIUM_2, right: margin_medium),
           itemCount: movieList?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
@@ -314,7 +372,7 @@ class _BannerSectionViewState extends State<BannerSectionView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Container(
+      SizedBox(
         height: MediaQuery.of(context).size.height / 3.5,
         child: PageView(
             onPageChanged: (page) {
@@ -357,7 +415,7 @@ class GenreSectionView extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: margin_medium_2),
+          padding: const EdgeInsets.symmetric(horizontal: margin_medium_2),
           child: DefaultTabController(
             length: genreList.length,
             child: TabBar(
@@ -371,7 +429,7 @@ class GenreSectionView extends StatelessWidget {
                   .toList() ?? [],
               onTap: (index){
 
-              onChooseGenre(genreList?[index].id ?? 0);
+              onChooseGenre(genreList[index].id ?? 0);
 
               },
             ),
