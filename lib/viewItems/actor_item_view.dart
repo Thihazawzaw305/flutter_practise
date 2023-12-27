@@ -13,7 +13,7 @@ class ActorItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: MARGIN_MEDIUM_2),
-      width: 190,
+      width: 170,
       child: Stack(
         children: [
           Positioned.fill(

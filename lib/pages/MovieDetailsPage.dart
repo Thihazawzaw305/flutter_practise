@@ -45,8 +45,12 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       });
     }).catchError((onError) {
       debugPrint(onError.toString());
+
     });
 
+
+
+    
 
     _movieModel.getCreditsByMovie(widget.movieId).then((castAndCrew) {
       setState(() {
@@ -296,12 +300,12 @@ class StoryLineView extends StatelessWidget {
       children: [
         const TitleText(text: "STORYLINE"),
         const SizedBox(height: margin_medium),
-        Text(storyLine),
+        Text(storyLine,style: const TextStyle(color: Colors.white),),
       ],
     );
   }
 }
-
+//hdfsts thddskfe oer fkhskotudfkkf fehefdhfdfh dfheorfkhdl oorufdfhkfdgs thkdgg
 class GenreChipView extends StatelessWidget {
   const GenreChipView(
     this.text, {super.key}
@@ -530,8 +534,8 @@ class MovieDetailsAppBarImageView extends StatelessWidget {
       CachedNetworkImage(
         imageUrl: "$IMAGE_BASE_URL$imageString",
         fit: BoxFit.cover,
-        placeholder: (context, url) => CircularProgressIndicator(),
-        errorWidget: (context, url, error) => Icon(Icons.error),
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       );
   }
 }

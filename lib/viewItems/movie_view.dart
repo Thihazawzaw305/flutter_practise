@@ -16,7 +16,7 @@ class MovieView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: MARGIN_MEDIUM_2),
-      width: 150,
+      width: 140,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

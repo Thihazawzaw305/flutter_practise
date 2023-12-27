@@ -49,17 +49,19 @@ class _HomePageState extends State<HomePage> {
 
   MovieModel movieModel = MovieModelImpl();
 
+//the stage the the
   @override
   void initState() {
     super.initState();
+
    //PopularMovie Network
-    movieModel.getPopularMovie(1).then((popularMovieList) {
-      setState(() {
-        popularMovies = popularMovieList;
-      });
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-    });
+   //  movieModel.getPopularMovie(1).then((popularMovieList) {
+   //    setState(() {
+   //      popularMovies = popularMovieList;
+   //    });
+   //  }).catchError((onError) {
+   //    debugPrint(onError.toString());
+   //  });
 
     // PopularMovie Database
     movieModel.getPopularMovieFromDatabase().then((popularMovieList) {
@@ -72,13 +74,13 @@ class _HomePageState extends State<HomePage> {
 
 
     // nowPlayingMovie network
-    movieModel.getNowPlayingMovie(1).then((movieList) {
-      setState(() {
-        nowPlayingMovies = movieList;
-      });
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-    });
+    // movieModel.getNowPlayingMovie(1).then((movieList) {
+    //   setState(() {
+    //     nowPlayingMovies = movieList;
+    //   });
+    // }).catchError((onError) {
+    //   debugPrint(onError.toString());
+    // });
 
     // getNowPlaying database
     movieModel.getNowPlayingMovieFromDatabase().then((movieList) {
@@ -118,13 +120,13 @@ class _HomePageState extends State<HomePage> {
 
 
     // get TopRated from network
-    movieModel.getTopRatedMovies(1).then((movieList) {
-      setState(() {
-        topRatedMovies = movieList;
-      });
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-    });
+    // movieModel.getTopRatedMovies(1).then((movieList) {
+    //   setState(() {
+    //     topRatedMovies = movieList;
+    //   });
+    // }).catchError((onError) {
+    //   debugPrint(onError.toString());
+    // });
 
     // get TopRated from database
     movieModel.getTopRatedMovieFromDatabase().then((movieList) {
