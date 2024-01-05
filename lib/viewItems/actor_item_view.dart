@@ -80,7 +80,7 @@ class ActorNameAndLikeView extends StatelessWidget {
               size: MARGIN_MEDIUM_2,),
               SizedBox(width: margin_medium),
               Text("YOU LIKES 15 MOVIES",style: TextStyle(
-                fontSize: textSmaller,
+                fontSize: 9,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
